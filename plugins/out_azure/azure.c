@@ -264,6 +264,7 @@ static void cb_azure_flush(const void *data, size_t bytes,
         FLB_OUTPUT_RETURN(FLB_ERROR);
     }
     payload = (flb_sds_t) buf_data;
+    flb_debug("[out_azure] payload: %s", payload);
 
     /* Compose HTTP Client request */
     c = flb_http_client(u_conn, FLB_HTTP_POST, ctx->uri,
