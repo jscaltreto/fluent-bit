@@ -294,8 +294,8 @@ static void cb_azure_flush(const void *data, size_t bytes,
     }
     else {
         if (c->resp.status >= 200 && c->resp.status <= 299) {
-            flb_info("[out_azure] customer_id=%s, HTTP status=%i, Body length=%i, Total Length=%i, Num records=%zu",
-                     ctx->customer_id, c->resp.status, c->body_len, b_sent, num_records);
+            flb_info("[out_azure] customer_id=%s, http_status=%i, log_type=%s, body_length=%i, total_length=%i, num_records=%zu",
+                     ctx->customer_id, c->resp.status, ctx->log_type, c->body_len, b_sent, num_records);
         }
         else {
             if (c->resp.payload_size > 0) {
