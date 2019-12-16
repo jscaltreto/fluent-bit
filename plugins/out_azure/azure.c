@@ -48,7 +48,7 @@ static int cb_azure_init(struct flb_output_instance *ins,
 
 int azure_format(const void *in_buf, size_t in_bytes,
                  char **out_buf, size_t *out_size,
-                 struct flb_azure *ctx, int num_records)
+                 struct flb_azure *ctx, int *num_records)
 {
     int i;
     int array_size = 0;
@@ -73,7 +73,7 @@ int azure_format(const void *in_buf, size_t in_bytes,
     while (msgpack_unpack_next(&result, in_buf, in_bytes, &off) == MSGPACK_UNPACK_SUCCESS) {
         array_size++;
     }
-    num_records = array_size;
+    *num_records = array_size;
 
     msgpack_unpacked_destroy(&result);
     msgpack_unpacked_init(&result);
@@ -244,7 +244,7 @@ static void cb_azure_flush(const void *data, size_t bytes,
                            struct flb_config *config)
 {
     int ret;
-    int num_records;
+    int *num_records;
     size_t b_sent;
     char *buf_data;
     size_t buf_size;
@@ -295,7 +295,7 @@ static void cb_azure_flush(const void *data, size_t bytes,
     else {
         if (c->resp.status >= 200 && c->resp.status <= 299) {
             flb_info("[out_azure] customer_id=%s, HTTP status=%i, Body length=%i, Total Length=%i, Num records=%i",
-                     ctx->customer_id, c->resp.status, c->body_len, b_sent, num_records);
+                     ctx->customer_id, c->resp.status, c->body_len, b_sent, *num_records);
         }
         else {
             if (c->resp.payload_size > 0) {
